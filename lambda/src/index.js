@@ -26,7 +26,7 @@ const LaunchRequestHandler = {
     }
   
     let skill = alexa.SkillBuilders.standard()
-        //.withSkillId("PUT SKILL ID HERE") //also available as process.env.ASK_SKILL_ID
+        .withSkillId(process.env.ASK_SKILL_ID)
         .addRequestHandlers( 
             LaunchRequestHandler, 
         )
