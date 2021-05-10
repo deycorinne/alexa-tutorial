@@ -45,6 +45,23 @@ const ErrorHandler = {
   }
 };
 
+// Custom Event handler
+// can handle multiple intents
+const WifiPasswordIntentHandler = {
+  canHandle(handlerInput) {
+      return alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+          && alexa.getIntentName(handlerInput.requestEnvelope) === 'WifiPasswordIntent';
+  },
+  handle(handlerInput) {
+      const speakOutput = 'The wifi password for this house is "password".';
+
+      return handlerInput.responseBuilder
+          .speak(speakOutput)
+          .reprompt(speakOutput)
+          .getResponse();
+  }
+};
+
 /**
  * This handler acts as the entry point for your skill, routing all request and response
  * payloads to the handlers above. Make sure any new handlers or interceptors you've
@@ -59,6 +76,7 @@ const ErrorHandler = {
         .withSkillId(process.env.ASK_SKILL_ID)
         .addRequestHandlers( 
             LaunchRequestHandler, 
+            WifiPasswordIntentHandler,
             HelpIntentHandler
         )
         .addErrorHandlers(ErrorHandler)
