@@ -54,8 +54,9 @@ const WifiPasswordIntentHandler = {
   },
   handle(handlerInput) {
       let slot = handlerInput.requestEnvelope.request.intent.slots.house.resolutions.resolutionsPerAuthority[0].values[0].value.id;
-      const speakOutput = 'The wifi password for the ' + slot + ' house is "password".';
-
+      // const house = alexa.getSlotValue(handlerInput.requestEnvelope, 'house');
+      const speakOutput = 'The wifi password for the ' + slot + ' house is "' + process.env[slot] + '".';
+      handlerInput.attributesManager.setSessionAttributes({"location" : slot});
       return handlerInput.responseBuilder
           .speak(speakOutput)
           .reprompt(speakOutput)
