@@ -53,7 +53,8 @@ const WifiPasswordIntentHandler = {
           && alexa.getIntentName(handlerInput.requestEnvelope) === 'WifiPasswordIntent';
   },
   handle(handlerInput) {
-      const speakOutput = 'The wifi password for this house is "password".';
+      let slot = handlerInput.requestEnvelope.request.intent.slots.house.resolutions.resolutionsPerAuthority[0].values[0].value.id;
+      const speakOutput = 'The wifi password for the ' + slot + ' house is "password".';
 
       return handlerInput.responseBuilder
           .speak(speakOutput)
