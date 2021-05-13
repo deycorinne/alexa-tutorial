@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "npx lambda-local -l lambda/src/index.js -h handler -e lambda/test/sample_invoke.json",
+    "update": "./scripts/run.sh -c 'npm run update_lambda'",
     "zip": "./scripts/zip_lambda.sh",
     "push": "./scripts/push_lambda.sh",
     "update_lambda": "./scripts/zip_lambda.sh && ./scripts/push_lambda.sh"

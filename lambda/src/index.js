@@ -53,11 +53,39 @@ const WifiPasswordIntentHandler = {
           && alexa.getIntentName(handlerInput.requestEnvelope) === 'WifiPasswordIntent';
   },
   handle(handlerInput) {
-      let slot = handlerInput.requestEnvelope.request.intent.slots.house.resolutions.resolutionsPerAuthority[0].values[0].value.id;
-      // const house = alexa.getSlotValue(handlerInput.requestEnvelope, 'house');
-      const speakOutput = 'The wifi password for the ' + slot + ' house is "' + process.env[slot.toUpperCase()] + '".';
-      handlerInput.attributesManager.setSessionAttributes({"location" : slot});
-      //  const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+      const speakOutput = 'Where are you?';
+      handlerInput.attributesManager.setSessionAttributes({"previous_intent" : "WifiPasswordIntent"});
+
+      if (sessionAttributes.location != null) {
+        speakOutput = 'The wifi password for the ' + location + ' house is "' + process.env[slot.toUpperCase()] + '".';
+      } 
+      
+      return handlerInput.responseBuilder
+      .speak(speakOutput)
+      .reprompt(speakOutput)
+      .getResponse();
+  }
+};
+
+// Custom Event handler
+// can handle multiple intents
+const WhereIntentHandler = {
+  canHandle(handlerInput) {
+      return alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+          && alexa.getIntentName(handlerInput.requestEnvelope) === 'WhereIntentHandler';
+  },
+  handle(handlerInput) {
+      const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+      let location = handlerInput.requestEnvelope.request.intent.slots.location.resolutions.resolutionsPerAuthority[0].values[0].value.id;
+        
+      let speakOutput = 'You said you are at ' + location + '. What is it you want?';
+
+      if (sessionAttributes.previous_intent == 'WifiPasswordIntent') {
+        speakOutput = 'The wifi password for the ' + location + ' house is "' + process.env[slot.toUpperCase()] + '".';
+      } 
+      
+      handlerInput.attributesManager.setSessionAttributes({"previous_intent" : "WhereIntentHandler"});
+
       return handlerInput.responseBuilder
           .speak(speakOutput)
           .reprompt(speakOutput)
@@ -79,6 +107,7 @@ const WifiPasswordIntentHandler = {
         .withSkillId(process.env.ASK_SKILL_ID)
         .addRequestHandlers( 
             LaunchRequestHandler, 
+            WhereIntentHandler,
             WifiPasswordIntentHandler,
             HelpIntentHandler
         )
